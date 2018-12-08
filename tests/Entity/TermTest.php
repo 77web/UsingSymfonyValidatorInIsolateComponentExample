@@ -5,6 +5,7 @@ namespace Quartetcom\DecBlogDemo\Entity;
 
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\Validation;
 
 class TermTest extends TestCase
 {
@@ -22,20 +23,22 @@ class TermTest extends TestCase
 
     private function assertValidTerm(Term $term)
     {
-        $this->doValidate($term);
-
-        $this->assertTrue(true);
+        $this->assertEquals(0, $this->getViolationCount($term));
     }
 
     private function assertInvalidTerm(Term $term)
     {
-        $this->expectException(\LogicException::class);
-
-        $this->doValidate($term);
+        $this->assertGreaterThan(0, $this->getViolationCount($term));
     }
 
-    private function doValidate(Term $term)
+    /**
+     * @param Term $term
+     * @return int length of errors
+     */
+    private function getViolationCount(Term $term): int
     {
-        $term->validateLessThan90Days();
+        $validator = Validation::createValidator();
+
+        return count($validator->validate($term));
     }
 }

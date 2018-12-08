@@ -2,6 +2,9 @@
 
 namespace Quartetcom\DecBlogDemo\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 class Term
 {
     /**
@@ -20,10 +23,17 @@ class Term
         $this->to = $to;
     }
 
-    public function validateLessThan90Days()
+    /**
+     * @Assert\Callback
+     * @param ExecutionContextInterface $context
+     */
+    public function validateLessThan90Days(ExecutionContextInterface $context)
     {
         if ($this->to->diff($this->from)->days > 90) {
-            throw new \LogicException('Term is too long.');
+            $context->buildViolation('term.too_long')
+                ->atPath('to')
+                ->addViolation()
+            ;
         }
     }
 
