@@ -37,7 +37,7 @@ class TermTest extends TestCase
      */
     private function getViolationCount(Term $term): int
     {
-        $validator = Validation::createValidator();
+        $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
 
         return count($validator->validate($term));
     }
