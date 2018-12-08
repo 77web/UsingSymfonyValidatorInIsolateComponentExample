@@ -4,6 +4,7 @@
 namespace Quartetcom\DecBlogDemo\Entity;
 
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 
@@ -37,6 +38,7 @@ class TermTest extends TestCase
      */
     private function getViolationCount(Term $term): int
     {
+        AnnotationRegistry::registerLoader('class_exists');
         $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
 
         return count($validator->validate($term));
